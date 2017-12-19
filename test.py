@@ -1,4 +1,4 @@
-import bs4, requests
+import bs4, requests, webbrowser, os, ui
 
 with open("listings.txt", "wb") as f:
 	res = requests.get("https://tampa.craigslist.org/search/sss?query=vintage%20bicycle&sort=rel").text.encode('ascII', 'ignore')
@@ -17,7 +17,7 @@ neighborhoods = soup.find_all("span", "result-hood")
 
 area, desc, dates = [], [], []
 
-with open("output.txt", "w+") as o:
+with open("output.html", "w+") as o:
 	for z in times:
 		x = z.getText()
 		dates.append(x)
@@ -33,5 +33,13 @@ with open("output.txt", "w+") as o:
 		area.append(n)
 	
 	for a, b, c in zip(dates, desc, area):
-		output = a + "\n" + b + "\n" + c + "\n\n"
+		output = a + "\n" + b + "\n" + c + "<br><br>"
 		o.write(output)
+
+file = os.path.abspath("output.html")
+
+w = ui.WebView()
+
+w.load_url(file)
+
+w.present()
